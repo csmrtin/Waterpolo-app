@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "139464018354",
+    "project_id": "waterpolo-championship",
+    "storage_bucket": "waterpolo-championship.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:139464018354:android:44a2c69db250d54a6b7cab",
+        "android_client_info": {
+          "package_name": "com.example.waterpolo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "139464018354-k5no4v7clgh64jbg783s0a8jonv028p6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.waterpolo",
+            "certificate_hash": "ccd5f16bdce5d5ead1c8d03f9d1138eb533d4b48"
+          }
+        },
+        {
+          "client_id": "139464018354-7a5vjm76lld6po3udes7csa7kruudlo9.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA5F29odn74HkdeVEU5jfi9yZV_CATwgQk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "139464018354-7a5vjm76lld6po3udes7csa7kruudlo9.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
