@@ -8,7 +8,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthSettings;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.auth.PhoneAuthProvider;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,6 +20,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button registerBtn, backBtn;
     FirebaseAuth auth;
     FirebaseFirestore db;
+    FirebaseAuthSettings authSettings;
 
     private void showSuccessDialog() {
         runOnUiThread(() -> {
@@ -40,6 +43,10 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
 
         auth = FirebaseAuth.getInstance();
+        authSettings = auth.getFirebaseAuthSettings();
+        // Disable app verification for testing
+        authSettings.setAppVerificationDisabledForTesting(true);
+        
         db = FirebaseFirestore.getInstance();
 
         email = findViewById(R.id.email);
@@ -67,6 +74,11 @@ public class RegisterActivity extends AppCompatActivity {
                 Toast.makeText(this, "Kérjük töltse ki az összes mezőt!", Toast.LENGTH_SHORT).show();
                 return;
             }
+
+            if (p.length() < 6) {
+                Toast.makeText(this, "A jelszónak legalább 6 karakter hosszúnak kell lennie!", Toast.LENGTH_SHORT).show();
+                return;
+            }
             
             auth.createUserWithEmailAndPassword(e, p)
                     .addOnSuccessListener(result -> {
@@ -86,7 +98,12 @@ public class RegisterActivity extends AppCompatActivity {
                                 });
                     })
                     .addOnFailureListener(e1 -> {
-                        Toast.makeText(this, "Regisztrációs hiba: " + e1.getMessage(), Toast.LENGTH_LONG).show();
+                        String errorMessage = e1.getMessage();
+                        if (errorMessage != null && errorMessage.contains("network")) {
+                            Toast.makeText(this, "Hálózati hiba történt. Kérjük ellenőrizze az internet kapcsolatot!", Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(this, "Regisztrációs hiba: " + errorMessage, Toast.LENGTH_LONG).show();
+                        }
                     });
         });
     }
