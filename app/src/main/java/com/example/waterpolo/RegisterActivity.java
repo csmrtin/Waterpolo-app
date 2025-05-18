@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
-
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.firebase.auth.FirebaseAuth;
@@ -18,6 +18,21 @@ public class RegisterActivity extends AppCompatActivity {
     Button registerBtn, backBtn;
     FirebaseAuth auth;
     FirebaseFirestore db;
+
+    private void showSuccessDialog() {
+        runOnUiThread(() -> {
+            AlertDialog dialog = new AlertDialog.Builder(this)
+                    .setTitle("Sikeres regisztráció")
+                    .setMessage("A regisztráció sikeresen megtörtént!")
+                    .setPositiveButton("OK", (dialogInterface, which) -> {
+                        dialogInterface.dismiss();
+                        finish(); // vissza a loginhoz
+                    })
+                    .setCancelable(false)
+                    .create();
+            dialog.show();
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +52,7 @@ public class RegisterActivity extends AppCompatActivity {
         backBtn = findViewById(R.id.backBtn);
 
         backBtn.setOnClickListener(v -> {
-            finish(); // This will close the current activity and return to the previous one (LoginActivity)
+            finish();
         });
 
         registerBtn.setOnClickListener(v -> {
@@ -48,14 +63,15 @@ public class RegisterActivity extends AppCompatActivity {
             String t = team.getText().toString().trim();
             String y = year.getText().toString().trim();
 
-            // Check for empty inputs
             if (e.isEmpty() || p.isEmpty() || un.isEmpty() || fn.isEmpty() || t.isEmpty() || y.isEmpty()) {
                 Toast.makeText(this, "Kérjük töltse ki az összes mezőt!", Toast.LENGTH_SHORT).show();
                 return;
             }
-
+            
             auth.createUserWithEmailAndPassword(e, p)
                     .addOnSuccessListener(result -> {
+                        showSuccessDialog();
+                        
                         String uid = auth.getCurrentUser().getUid();
                         Map<String, Object> user = new HashMap<>();
                         user.put("username", un);
@@ -65,17 +81,13 @@ public class RegisterActivity extends AppCompatActivity {
                         user.put("email", e);
 
                         db.collection("users").document(uid).set(user)
-                                .addOnSuccessListener(doc -> {
-                                    Toast.makeText(this, "Sikeres Regisztráció!", Toast.LENGTH_SHORT).show();
-                                    finish(); // vissza a loginhoz
-                                })
-                                .addOnFailureListener(e1 -> 
-                                    Toast.makeText(this, "Hiba történt a regisztráció során: " + e1.getMessage(), Toast.LENGTH_SHORT).show()
-                                );
+                                .addOnFailureListener(e1 -> {
+                                    Toast.makeText(this, "Adatmentési hiba: " + e1.getMessage(), Toast.LENGTH_LONG).show();
+                                });
                     })
-                    .addOnFailureListener(e1 ->
-                            Toast.makeText(this, "Hiba történt a regisztráció során: " + e1.getMessage(), Toast.LENGTH_SHORT).show()
-                    );
+                    .addOnFailureListener(e1 -> {
+                        Toast.makeText(this, "Regisztrációs hiba: " + e1.getMessage(), Toast.LENGTH_LONG).show();
+                    });
         });
     }
 }

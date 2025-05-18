@@ -45,6 +45,9 @@ dependencies {
     implementation("androidx.activity:activity:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     
+    // Add the annotation dependency
+    implementation("androidx.annotation:annotation:1.7.0")
+
     // Material3
     implementation("androidx.compose.material3:material3:1.2.0")
 

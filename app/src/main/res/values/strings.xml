@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Waterpolo</string>
+    <string name="add_new_team">Add New Team</string>
+    <string name="delete_team">Delete Team</string>
+    <string name="add_new_match">Add New Match</string>
 </resources>
